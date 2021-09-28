@@ -1,49 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  
-        #chatForm { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-        #input:focus { outline: none; }
-        #chatForm > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-  
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages > li { padding: 0.5rem 1rem; }
-        #messages > li:nth-child(odd) { background: #efefef; }
-      </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link rel="icon" href="./img/favicon.png"></link>
+    <link rel="stylesheet" href="./css/main.css"></link>
+    <link rel="stylesheet" href="./css/chat.css"></link>
+  </head>
+  <body>
     <ul id="messages"></ul>
     <form id="chatForm" action="">
       <input name="message" id="input" autocomplete="off" />
-      <button type="submit" id="sendButton">Send</button>
+      <button type="submit" id="chatSendBtn">Send</button>
     </form>
+
+    <button type="submit" id="sendLocationBtn">Send location</button>
+
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      
-        var socket = io();
-        socket.on('message', (data) => {
-          console.log(data)
-          const li = document.createElement('li')
-          li.innerText = data.message
-          document.querySelector('#messages').appendChild(li)
-        });
 
-        document.querySelector('#chatForm').addEventListener('submit', (e) => {
-          e.preventDefault()
-          const messageInput = e.target.elements.message
-          const message = messageInput.value
-          console.log(messageInput, message)
-          messageInput.value = ''
-          socket.emit('sendMessage', message)
-        })
-
+    <script id="message-template" type="text/html">
+      <div>
+        <p>{{createdAt}} - {{message}}</p>
+      </div>
     </script>
-</body>
+
+    <script id="location-message-template" type="text/html">
+      <div>
+         <p><a href="{{url}}" target="_blank">My current location</a></p>
+      </div>
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/4.2.0/mustache.min.js"></script>
+    <script src="./js/libs/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.10.1/qs.min.js"></script>
+    <script src="./js/chat.js"></script>
+  </body>
 </html>
